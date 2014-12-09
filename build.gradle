@@ -1,0 +1,73 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+group = 'com.avinash.sample'
+
+war {
+  baseName = 'sampleProject'
+  archiveName = 'sampleProject.war'
+}
+
+repositories{
+  mavenCentral()
+}
+
+buildscript{
+  repositories{
+	mavenCentral()
+  }
+
+}
+
+dependencies {
+  
+  //postgres driver
+  compile('postgresql:postgresql:9.0-801.jdbc4')
+  
+  //datasource
+  compile('commons-dbcp:commons-dbcp:1.4')
+
+  compile('org.apache.httpcomponents:httpclient:4.3.1')
+  compile('org.glassfish.jersey.ext:jersey-spring3:2.10.1')
+  compile('org.glassfish.jersey.media:jersey-media-json-jackson:2.10.1')
+  compile('com.sun.jersey:jersey-json:1.18.1')
+		  
+  //google lists
+  compile('com.google.guava:guava:17.0')
+  
+  //spring dependencies
+  compile('org.springframework:spring-core:4.0.0.RELEASE')
+  compile('org.springframework:spring-context:4.0.0.RELEASE'){
+	  exclude module: 'spring-aop', group: 'org.springframework'
+  }
+
+  compile('org.springframework:spring-beans:4.0.0.RELEASE')
+  compile('org.springframework:spring-web:4.0.0.RELEASE'){
+	  exclude module: 'spring-aop', group: 'org.springframework'
+  }
+  compile('org.springframework:spring-aop:4.0.0.RELEASE')
+  compile('org.springframework:spring-webmvc:4.0.0.RELEASE')
+  compile('org.springframework:spring-tx:4.0.0.RELEASE')
+  compile('org.springframework:spring-jdbc:4.0.0.RELEASE')
+  compile('org.springframework:spring-orm:4.0.0.RELEASE')
+  
+  compile('javax.servlet:jstl:1.2')
+  //servlet
+  compile('javax.servlet:javax.servlet-api:3.1.0')
+  compile('javax.inject:javax.inject:1')
+  compile('javax.servlet.jsp:jsp-api:2.1')
+  
+  
+  //hibernate
+  compile('org.hibernate:hibernate-entitymanager:4.3.6.Final')
+  
+  //jackson dependencies
+  compile('com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.3.0')
+  compile('com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.3.0')
+
+  //test dependencies
+  compile('org.mockito:mockito-core:1.9.5')
+  compile('org.springframework:spring-test:4.0.0.RELEASE')
+  compile('junit:junit:4.11')
+
+}

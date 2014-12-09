@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+		 http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+	<mvc:view-controller path="/person/show" view-name="home"/>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</bean>
+	
+	<bean id="jsonConverter"
+    	  class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+    	  <property name="supportedMediaTypes" value="application/json" />
+	</bean>
+	
+	<bean  id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    		destroy-method="close"
+    		p:driverClassName="${jdbc.driverClassName}"
+    		p:url="${jdbc.url}"
+    		p:username="${jdbc.username}"
+    		p:password="${jdbc.password}"
+    		p:maxActive="${jdbc.maxActive}"
+    		p:maxWait="${jdbc.maxWait}"/>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+    		p:dataSource-ref="dataSource"
+    		p:packagesToScan="com.avinash.sample.vo"
+    		p:hibernateProperties-ref="hibernateProperties"/>
+    		
+    <util:properties id="hibernateProperties">
+		<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		<prop key="hibernate.default_schema">mtsuser</prop>
+		<prop key="hibernate.max_fetch_depth">3</prop>
+		<prop key="hibernate.jdbc.fetch_size">50</prop>
+		<prop key="hibernate.jdbc.batch_size">10</prop>
+		<prop key="hibernate.show_sql">true</prop>
+	</util:properties>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+			p:sessionFactory-ref="sessionFactory"/>		
+
+	<context:property-placeholder location="classpath:META-INF/config/jdbc.properties"/>
+	
+	<context:component-scan base-package="com.avinash.sample" />
+	<tx:annotation-driven/>
+
+</beans>
